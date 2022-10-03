@@ -1,9 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins&display=swap');
+/*
+font-family: 'Permanent Marker', cursive;
+font-family: 'Poppins', sans-serif;
+*/
+
 :root {
   --spacing-sm: 1rem;
   --spacing-md: 1.4rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
+
+  --primary-color: rgb(177, 178, 255);
+  --secondary-color: rgb(210, 218, 255);
 }
+
 *,
 *::after,
 *::before {
@@ -11,26 +21,139 @@
   margin: 0;
   padding: 0;
 }
-
-html {
+html,
+body {
   height: 100%;
 }
-
 body {
-  min-height: 100%;
-  background-color: red;
+  padding: var(--spacing-sm);
+  background-image: url('img/paper.jpeg');
+  background-size: cover;
 }
-
+.layout {
+  font-family: 'Permanent Marker', cursive;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.layout.hide {
+  display: none;
+}
+/*SELECTION LAYOUT*/
+.selection {
+  padding-top: var(--spacing-xl);
+  text-align: center;
+  gap: var(--spacing-xl);
+}
+.selection h2 {
+  font-size: 2rem;
+}
+.items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.selection-item {
+  cursor: pointer;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+.selection-item:hover {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+}
+.selection-item h3 {
+  font-size: 1.5rem;
+}
+.selection-item img {
+  width: 100px;
+  height: auto;
+}
+/*BOARD*/
+.board-container {
+  padding: var(--spacing-lg);
+  background-color: var(--primary-color);
+}
 .board {
-  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
+  gap: 5px;
+  background-color: var(--secondary-color);
+  transform: scale(0);
+  transition: all 0.3s ease-in-out;
+}
+.board.active {
+  transform: scale(1);
 }
 .celd {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: var(--spacing-sm);
-  background-origin: content-box;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  font-size: 0rem;
+  transition: font-size 0.1s ease-in-out;
+}
+.celd.active {
+  font-size: 4rem;
+}
+/*SCORE*/
+.score {
+  font-size: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-xl);
+}
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--spacing-md);
+  padding: 0 var(--spacing-md);
+  transition: all 0.2s ease-in-out;
+  background-color: var(--secondary-color);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+}
+.player .player-name {
+  font-size: 4rem;
+}
+.player .player-score {
+  font-size: 1rem;
+}
+/*MODAL*/
+.overlay {
+  display: none;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.modal {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: scale(0);
+  transform: translate(-50%, -50%);
+  transition: all 0.2s ease-in-out;
+}
+.modal.active,
+.overlay.active {
+  display: block;
+}
+
+.game-result {
+  font-size: 3rem;
+  color: white;
 }

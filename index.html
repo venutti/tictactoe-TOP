@@ -5,26 +5,57 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaTeTi</title>
+  <title>Ta-Te-Ti</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./main.js" defer></script>
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-  
-  <div class="board">
-    <div class="celd" data-id="0"></div>
-    <div class="celd" data-id="1"></div>
-    <div class="celd" data-id="2"></div>
-    <div class="celd" data-id="3"></div>
-    <div class="celd" data-id="4"></div>
-    <div class="celd" data-id="5"></div>
-    <div class="celd" data-id="6"></div>
-    <div class="celd" data-id="7"></div>
-    <div class="celd" data-id="8"></div>
+  <div class="layout selection">
+    <h2>ELIJE A TU ADVERSARIO</h2>
+    <div class="items">
+      <div class="selection-item">
+        <h3>vs. jugador</h3>
+        <img src="./img/person.svg">
+      </div>
+      <div class="selection-item">
+        <h3>vs. ia</h3>
+        <img src="./img/computer.svg">
+      </div>
+    </div>
   </div>
-
+  <div class="layout principal hide">
+    <div class="score">
+      <div class="player">
+        <div class="player-name">X</div>
+        <div class="player-score X">-</div>
+      </div>
+      <div class="player">
+        <div class="player-name">O</div>
+        <div class="player-score O">-</div>
+      </div>
+    </div>
+    <div class="turn">
+      Turno de X
+    </div>
+    <div class="board-container">
+      <div class="board">
+        <div class="celd" data-id="0"></div>
+        <div class="celd" data-id="1"></div>
+        <div class="celd" data-id="2"></div>
+        <div class="celd" data-id="3"></div>
+        <div class="celd" data-id="4"></div>
+        <div class="celd" data-id="5"></div>
+        <div class="celd" data-id="6"></div>
+        <div class="celd" data-id="7"></div>
+        <div class="celd" data-id="8"></div>
+      </div>  
+    </div>
+    <div class="overlay"></div>
+    <div class="modal game-result"></div>
+  </div>
+  
 </body>
 
 </html>

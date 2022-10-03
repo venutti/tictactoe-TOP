@@ -1,13 +1,3 @@
-const player = function(name, marker) {
-  const getName = () => name;
-  const getMarker = () => marker;
-
-  return {
-    getName,
-    getMarker,
-  };
-};
-
 const celdBoard = function(i) {
   let value = undefined;
 
@@ -18,9 +8,6 @@ const celdBoard = function(i) {
   const contains = function(v) {
     return v === value;
   };
-  const getValue = function() {
-    return value;
-  }; //debug
   const setValue = (newValue) => {
     value = newValue;
   };
@@ -37,7 +24,6 @@ const celdBoard = function(i) {
     isInFirstDiagonal,
     isInSecondDiagonal,
     contains,
-    getValue,
     setValue,
     isEmpty,
     reset,
@@ -53,14 +39,10 @@ const celdCollection = function() {
   const isFullOf = function(marker) {
     return celds.every(celd => celd.contains(marker));
   };
-  const show = function() {
-    return celds.map(celd => celd.getValue());
-  }; // debug
 
   return {
     add,
     isFullOf,
-    show,
   };
 };
 
@@ -113,12 +95,6 @@ const gameBoard = (function() {
     board[index].setValue(marker);
     return true;
   };
-  const show = function() {
-    console.log(board.map(celd => celd.getValue()));
-    rows.forEach(row => {
-      console.log(row.show());
-    });
-  }; // debug
   const reset = function() {
     board.forEach(celd => celd.reset());
   };
@@ -129,63 +105,102 @@ const gameBoard = (function() {
     setMovement,
     isTie,
     isWin,
-    show,
   };
 })();
 
 const displayController = (function() {
   const boardElement = document.querySelector('.board');
   const celdsElement = Array.from(document.querySelectorAll('.celd'));
-  const img = {
-    'X' : 'img/simbolo-x.png',
-    'O' : 'img/simbolo-o.png',
+  const turnElement = document.querySelector('.turn');
+  const overlayElement = document.querySelector('.overlay');
+  const gameResultElement = document.querySelector('.game-result');
+  const scoreXelement = document.querySelector('.X');
+  const scoreOelement = document.querySelector('.O');
+  const scores = {
+    'X': 0,
+    'O': 0,
   };
 
-  let player1 = player('Juan', 'X');
-  let player2 = player('Pedro', 'O');  
+  let player1 = 'X';
+  let player2 = 'O';
   let currentPlayer = player1;
 
-  const changePlayer = function() {
-    if(currentPlayer === player1) {
-      currentPlayer = player2;
-    }else{
-      currentPlayer = player1;
-    };
+  const showBoard = function() {
+    scoreXelement.textContent = scores.X;
+    scoreOelement.textContent = scores.O;
+    boardElement.classList.add('active');
   };
-  const showMovement = function(celd, marker) {
-    celd.style.backgroundImage = `url(${img[marker]})`;
+  const hideBoard = function() {
+    boardElement.classList.remove('active');
+  };
+  const showModal = function(msj) {
+    gameResultElement.textContent = msj;
+    overlayElement.classList.add('active');
+    gameResultElement.classList.add('active');
+  };
+  const hideModal = function() {
+    gameResultElement.textContent = '';
+    overlayElement.classList.remove('active');
+    gameResultElement.classList.remove('active');
+  }
+  const changePlayer = function() {
+    currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    turnElement.textContent = `Turno de ${currentPlayer}`;
+  };
+  const showMovement = function(index) {
+    const celd = celdsElement[index];
+    celd.classList.add('active');
+    celd.textContent = currentPlayer;
   };
   const clear = function() {
     celdsElement.forEach(celd => {
-      celd.style.backgroundImage = 'none';
+      celd.classList.remove('active');
+      celd.textContent = '';
     });
+    hideBoard();
+    gameBoard.reset();
   };
-  const analizeState = function(index, marker) {
+  const resolveTie = function() {
+    clear();
+    showModal('¡Empate!');
+  };
+  const resolveWin = function() {
+    scores[currentPlayer]++;
+    clear();
+    showModal(`¡Ha ganado ${currentPlayer}!`);
+  };
+  const analizeState = function(index) {
+    console.log(index, currentPlayer)
+    if(gameBoard.isWin(index, currentPlayer)) {
+      resolveWin();
+      return;
+    };
     if(gameBoard.isTie()) {
-      console.log('Empate wei');
-      gameBoard.reset();
-      clear();
-    };
-    if(gameBoard.isWin(index, marker)) {
-      console.log(`Ganó ${marker} wei`);
-      gameBoard.reset();
-      clear();
+      resolveTie();
+      return;
     };
   };
-  const setMovement = function(celd, index) {
-    let marker = currentPlayer.getMarker();
-    let couldMove = gameBoard.setMovement(index, marker);
+  const setMovement = function(index) {
+    let couldMove = gameBoard.setMovement(index, currentPlayer);
     if(!couldMove) return;
-    showMovement(celd, marker);
-    analizeState(index, marker);
+    showMovement(index);
+    analizeState(index);
     changePlayer();
   };
   const init = function() {
+    showBoard();
     boardElement.addEventListener('click', e => {
-      const celd = e.target;
       const index = e.target.dataset.id;
       if(index === undefined) return;
-      displayController.setMovement(celd, index);
+      displayController.setMovement(index);
+    });
+    overlayElement.addEventListener('click', () => {
+      hideModal();
+      showBoard();
+    });
+    gameResultElement.addEventListener('click', () => {
+      hideModal();
+      showBoard();
     });
   };
 
@@ -195,7 +210,9 @@ const displayController = (function() {
   };
 })();
 
+
 displayController.init()
+
 
 
 
