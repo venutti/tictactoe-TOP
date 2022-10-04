@@ -95,6 +95,15 @@ const gameBoard = (function() {
     board[index].setValue(marker);
     return true;
   };
+  const IAselection1 = function() {
+    const undefArray = [];
+    board.forEach((celd, i) => {
+      if(celd.isEmpty()) {
+        undefArray.push(i);
+      }
+    });
+    return undefArray[Math.floor(Math.random() * undefArray.length)];
+  };
   const reset = function() {
     board.forEach(celd => celd.reset());
   };
@@ -105,6 +114,7 @@ const gameBoard = (function() {
     setMovement,
     isTie,
     isWin,
+    IAselection1,
   };
 })();
 
@@ -187,12 +197,19 @@ const displayController = (function() {
     analizeState(index);
     changePlayer();
   };
-  const init = function() {
+  const setIaMovement = function(iaLevel) {
+    if(iaLevel === 0) return;
+    if(iaLevel === 1) {
+      setMovement(gameBoard.IAselection1());
+    }
+  };
+  const init = function(iaLevel) {
     showBoard();
     boardElement.addEventListener('click', e => {
       const index = e.target.dataset.id;
       if(index === undefined) return;
       displayController.setMovement(index);
+      displayController.setIaMovement(iaLevel);
     });
     overlayElement.addEventListener('click', () => {
       hideModal();
@@ -207,11 +224,21 @@ const displayController = (function() {
   return {
     init,
     setMovement,
+    setIaMovement,
   };
 })();
 
-
-displayController.init()
+const selectionLayout = document.querySelector('.selection');
+const principalLayout = document.querySelector('.principal');
+const selections = Array.from(document.querySelectorAll('.selection-item'));
+selections.forEach(selection => {
+  selection.addEventListener('click', () => {
+    const ia = +selection.dataset.ia;
+    displayController.init(ia);
+    selectionLayout.classList.toggle('hide');
+    principalLayout.classList.toggle('hide');
+  });
+});
 
 
 
